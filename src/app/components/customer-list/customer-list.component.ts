@@ -24,11 +24,14 @@ export class CustomerListComponent implements OnInit {
 
   };
 
+  trackById(index: number, customer: Customer): number {
+    return customer.id!;
+  }
+
   listCustomers(): void {
     this._customerService.getCustomerList().subscribe(
       data => {
         this.customers = data;
-        console.log(this.customers);
       }
     );
   }
@@ -38,4 +41,18 @@ export class CustomerListComponent implements OnInit {
       customer.firstName.toLowerCase().includes(this.filterName.toLowerCase())
     );
   }
+  deleteCustomer(id: number): void {
+    const confirmDelete = confirm('¿Estás seguro de que quieres eliminar este cliente?');
+    if (confirmDelete) {
+      this._customerService.deleteCustomer(id).subscribe({
+        next: () => {
+          this.customers = this.customers.filter(c => c.id !== id);
+        },
+        error: (err) => {
+          console.error('Error al eliminar cliente:', err);
+        }
+      });
+    }
+  }
+
 }

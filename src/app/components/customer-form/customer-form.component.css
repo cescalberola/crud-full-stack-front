@@ -1,0 +1,21 @@
+.form-group {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input {
+  width: 30%;
+  padding: 6px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  border-radius: 15px;
+}
+
+button {
+  border-radius: 15px;
+  cursor: pointer;
+}

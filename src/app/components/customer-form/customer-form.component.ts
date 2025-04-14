@@ -29,33 +29,43 @@ export class CustomerFormComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-
     if (id) {
+      this.editCustomer(+id);
       this.isEditMode = true;
-      this.customerService.getCustomer(+id).subscribe({
-        next: (data) => this.customer = data,
-        error: (err) => console.error('Error al obtener cliente:', err)
-      });
     }
   }
 
   onSubmit(): void {
     if (this.isEditMode) {
-      this.customerService.updateCustomer(this.customer).subscribe({
-        next: () => {
-          alert('Cliente actualizado');
-          this.router.navigate(['/lista']);
-        },
-        error: (err) => console.error('Error al actualizar cliente:', err)
-      });
+      this.updateCustomer();
     } else {
-      this.customerService.createCustomer(this.customer).subscribe({
-        next: () => {
-          alert('Cliente creado');
-          this.router.navigate(['/lista']);
-        },
-        error: (err) => console.error('Error al crear cliente:', err)
-      });
+      this.createCustomer();
     }
+  }
+
+  private createCustomer(): void {
+    this.customerService.createCustomer(this.customer).subscribe({
+      next: () => this.navigateToList('Cliente creado'),
+      error: (err) => console.error('Error al crear cliente:', err)
+    });
+  }
+
+  private editCustomer(id: number): void {
+    this.customerService.getCustomer(id).subscribe({
+      next: (data) => this.customer = data,
+      error: (err) => console.error('Error al obtener cliente:', err)
+    });
+  }
+
+  private updateCustomer(): void {
+    this.customerService.updateCustomer(this.customer).subscribe({
+      next: () => this.navigateToList('Cliente actualizado'),
+      error: (err) => console.error('Error al actualizar cliente:', err)
+    });
+  }
+
+  private navigateToList(message: string): void {
+    alert(message);
+    this.router.navigate(['/lista']);
   }
 }
