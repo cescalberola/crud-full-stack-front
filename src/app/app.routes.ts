@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
 import { CustomerListComponent } from './components/customer-list/customer-list.component';
-import { EjemploComponent } from './components/ejemplo/ejemplo.component';
+import { CustomerFormComponent } from './components/customer-form/customer-form.component';
 
 export const routes: Routes = [
   { path: 'lista', component: CustomerListComponent },
-  { path: 'ejemplo', component: EjemploComponent }
+  { path: 'crear', component: CustomerFormComponent },
+  { path: 'editar/:id', component: CustomerFormComponent },
+  { path: '', redirectTo: 'lista', pathMatch: 'full' }
 ];

@@ -1,0 +1,25 @@
+<h2>{{ isEditMode ? 'Editar Cliente' : 'Crear Cliente' }}</h2>
+
+<form (ngSubmit)="onSubmit()" #customerForm="ngForm">
+  <label>
+    Nombre:
+    <input type="text" name="firstName" [(ngModel)]="customer.firstName" required />
+  </label>
+  <br /><br />
+  <label>
+    Apellido:
+    <input type="text" name="lastName" [(ngModel)]="customer.lastName" required />
+  </label>
+  <br /><br />
+  <label>
+    Email:
+    <input type="email" name="email" [(ngModel)]="customer.email" required />
+  </label>
+  <br /><br />
+
+  <button type="submit" [disabled]="customerForm.invalid">Guardar</button>
+</form>
+
+<br />
+<a routerLink="/lista">← Volver a la lista</a>
+

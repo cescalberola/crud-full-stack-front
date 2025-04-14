@@ -1,5 +1,12 @@
 <h2>Lista de Clientes</h2>
 
+<input
+  type="text"
+  placeholder="Buscar por nombre..."
+  [(ngModel)]="filterName"
+  style="margin-bottom: 10px; padding: 4px; width: 250px;"
+/>
+
 <table cellspacing="0" cellpadding="8">
   <thead>
     <tr>
@@ -10,12 +17,15 @@
     </tr>
   </thead>
   <tbody>
-    @for (customer of customers; track customer.id) {
+    @for (customer of filteredCustomers(); track customer.id){
       <tr>
         <td>{{ customer.id }}</td>
         <td>{{ customer.firstName }}</td>
         <td>{{ customer.lastName }}</td>
         <td>{{ customer.email }}</td>
+        <td>
+          <button [routerLink]="['/editar', customer.id]">Editar</button>
+        </td>
       </tr>
     }
   </tbody>
