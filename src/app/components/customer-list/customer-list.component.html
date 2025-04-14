@@ -7,6 +7,10 @@
   style="margin-bottom: 10px; padding: 4px; width: 250px;"
 />
 
+@if (alertMessage) {
+  <app-alert [message]="alertMessage" [type]="alertType" />
+}
+
 <table cellspacing="0" cellpadding="8">
   <thead>
     <tr>
@@ -25,9 +29,17 @@
         <td>{{ customer.email }}</td>
         <td>
           <button [routerLink]="['/editar', customer.id]">Editar</button>
-          <button (click)="deleteCustomer(customer.id!)">Eliminar</button>
+          <button (click)="onRequestDelete(customer.id!)">Eliminar</button>
         </td>
       </tr>
     }
   </tbody>
 </table>
+<app-confirm-modal
+  [visible]="showModal"
+  [message]="deleteMsg"
+  [confirmText]="confirmText"
+  [cancelText]="cancelText"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()"
+/>

@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CustomerService } from '../../service/customer.service';
 import { Customer } from '../../interfaces/customer.interface';
-import { RouterLink } from '@angular/router';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import {
+  ALERT_MESSAGES,
+  ALERT_TYPES,
+  AlertType
+} from '../../shared/app.constants';
 
 @Component({
   selector: 'app-customer-form',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, AlertComponent],
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.css',
 })
@@ -20,6 +25,8 @@ export class CustomerFormComponent implements OnInit {
   };
 
   isEditMode: boolean = false;
+  alertMessage: string = '';
+  alertType: AlertType | '' = '';
 
   constructor(
     private customerService: CustomerService,
@@ -45,8 +52,11 @@ export class CustomerFormComponent implements OnInit {
 
   private createCustomer(): void {
     this.customerService.createCustomer(this.customer).subscribe({
-      next: () => this.navigateToList('Cliente creado'),
-      error: (err) => console.error('Error al crear cliente:', err)
+      next: () => this.showAlert(ALERT_MESSAGES.CREATE_SUCCESS, ALERT_TYPES.SUCCESS),
+      error: (err) => {
+        console.error(err);
+        this.showAlert(ALERT_MESSAGES.CREATE_ERROR, ALERT_TYPES.ERROR);
+      }
     });
   }
 
@@ -59,13 +69,22 @@ export class CustomerFormComponent implements OnInit {
 
   private updateCustomer(): void {
     this.customerService.updateCustomer(this.customer).subscribe({
-      next: () => this.navigateToList('Cliente actualizado'),
-      error: (err) => console.error('Error al actualizar cliente:', err)
+      next: () => this.showAlert(ALERT_MESSAGES.UPDATE_SUCCESS, ALERT_TYPES.SUCCESS),
+      error: (err) => {
+        console.error(err);
+        this.showAlert(ALERT_MESSAGES.UPDATE_ERROR, ALERT_TYPES.ERROR);
+      }
     });
   }
 
-  private navigateToList(message: string): void {
-    alert(message);
-    this.router.navigate(['/lista']);
+  private showAlert(message: string, type: AlertType): void {
+    this.alertMessage = message;
+    this.alertType = type;
+
+    setTimeout(() => {
+      this.alertMessage = '';
+      this.alertType = '';
+      this.router.navigate(['/lista']);
+    }, 2000);
   }
 }

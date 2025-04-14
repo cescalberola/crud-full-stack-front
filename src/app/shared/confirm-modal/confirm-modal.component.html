@@ -1,0 +1,11 @@
+@if (visible) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <p>{{ message }}</p>
+      <div class="modal-buttons">
+        <button (click)="onConfirm()">{{ confirmText }}</button>
+        <button (click)="onCancel()">{{ cancelText }}</button>
+      </div>
+    </div>
+  </div>
+}
