@@ -1,3 +1,33 @@
+.customer-table-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  justify-content: space-between;
+}
+
+table {
+  width: 100%;
+}
+
+table th,
+table td {
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.pagination-controls button.active {
+  font-weight: bold;
+  background-color: #eee;
+}
+
 input {
   width: 30%;
   padding: 6px;
@@ -23,3 +53,7 @@ input {
   color: #721c24;
 }
 
+.actions {
+  min-width: 150px;
+  white-space: nowrap;
+}

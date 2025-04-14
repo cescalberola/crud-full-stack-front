@@ -54,8 +54,8 @@ export class CustomerFormComponent implements OnInit {
     this.customerService.createCustomer(this.customer).subscribe({
       next: () => this.showAlert(ALERT_MESSAGES.CREATE_SUCCESS, ALERT_TYPES.SUCCESS),
       error: (err) => {
-        console.error(err);
-        this.showAlert(ALERT_MESSAGES.CREATE_ERROR, ALERT_TYPES.ERROR);
+        const backendMessage = err?.error?.message || ALERT_MESSAGES.CREATE_ERROR;
+        this.showAlert(backendMessage, ALERT_TYPES.ERROR);
       }
     });
   }
@@ -71,8 +71,8 @@ export class CustomerFormComponent implements OnInit {
     this.customerService.updateCustomer(this.customer).subscribe({
       next: () => this.showAlert(ALERT_MESSAGES.UPDATE_SUCCESS, ALERT_TYPES.SUCCESS),
       error: (err) => {
-        console.error(err);
-        this.showAlert(ALERT_MESSAGES.UPDATE_ERROR, ALERT_TYPES.ERROR);
+        const backendMessage = err?.error?.message || ALERT_MESSAGES.UPDATE_ERROR;
+        this.showAlert(backendMessage, ALERT_TYPES.ERROR);
       }
     });
   }

@@ -25,6 +25,10 @@ export class CustomerListComponent implements OnInit {
 
   customers: Customer[] = [];
   filterName: string = '';
+  currentPage = 0;
+  pageSize = 5;
+  totalPages = 0;
+  totalElements = 0;
   showModal: boolean = false;
   customerIdToDelete: number | null = null;
   alertMessage: string = '';
@@ -42,17 +46,12 @@ export class CustomerListComponent implements OnInit {
       this.searchSubject.pipe(
         debounceTime(400),
         distinctUntilChanged()
-      ).subscribe((name) => {
-        this.customerService.getCustomerList(name).subscribe({
-          next: (data) => this.customers = data,
-          error: (err) => console.error('Error al buscar clientes:', err)
-        });
+      ).subscribe(() => {
+        this.currentPage = 0;
+        this.listCustomers();
       });
 
-      this.customerService.getCustomerList().subscribe({
-        next: (data) => this.customers = data,
-        error: (err) => console.error('Error al cargar clientes:', err)
-      });
+      this.listCustomers();
     }
 
 
@@ -66,8 +65,13 @@ export class CustomerListComponent implements OnInit {
 
   listCustomers(): void {
     const nameParam = this.filterName.trim();
-    this.customerService.getCustomerList(nameParam).subscribe({
-      next: (data) => this.customers = data,
+
+    this.customerService.getCustomerList(this.currentPage, this.pageSize, nameParam).subscribe({
+      next: (res) => {
+        this.customers = res.content;
+        this.totalPages = res.totalPages;
+        this.totalElements = res.totalElements;
+      },
       error: (err) => console.error('Error al cargar clientes:', err)
     });
   }
@@ -112,4 +116,12 @@ export class CustomerListComponent implements OnInit {
       this.alertType = '';
     }, 3000);
   }
+
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.listCustomers();
+    }
+  }
+
 }

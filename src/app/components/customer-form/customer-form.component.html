@@ -1,6 +1,8 @@
 <h2>{{ isEditMode ? 'Editar Cliente' : 'Crear Cliente' }}</h2>
 
-<app-alert [message]="alertMessage" [type]="alertType" />
+@if (alertMessage) {
+  <app-alert [message]="alertMessage" [type]="alertType" />
+}
 
 <form (ngSubmit)="onSubmit()" #customerForm="ngForm">
   <div class="form-group">

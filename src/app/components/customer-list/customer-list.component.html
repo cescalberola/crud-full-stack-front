@@ -1,46 +1,43 @@
 <h2>Lista de Clientes</h2>
 
-<input
-  type="text"
-  placeholder="Buscar por nombre..."
-  [(ngModel)]="filterName"
-  (ngModelChange)="onFilterChange()"
-  style="margin-bottom: 10px; padding: 4px; width: 250px;"
-/>
+<input type="text" placeholder="Buscar por nombre..." [(ngModel)]="filterName" (ngModelChange)="onFilterChange()"
+  style="margin-bottom: 10px; padding: 4px; width: 250px;" />
 
 @if (alertMessage) {
-  <app-alert [message]="alertMessage" [type]="alertType" />
+<app-alert [message]="alertMessage" [type]="alertType" />
 }
 
-<table cellspacing="0" cellpadding="8">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (customer of customers; track trackById){
+<div class="customer-table-container">
+  <table cellspacing="0" cellpadding="8">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Email</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (customer of customers; track trackById){
       <tr>
         <td>{{ customer.id }}</td>
         <td>{{ customer.firstName }}</td>
         <td>{{ customer.lastName }}</td>
         <td>{{ customer.email }}</td>
-        <td>
+        <td class="actions">
           <button [routerLink]="['/editar', customer.id]">Editar</button>
           <button (click)="onRequestDelete(customer.id!)">Eliminar</button>
         </td>
       </tr>
-    }
-  </tbody>
-</table>
-<app-confirm-modal
-  [visible]="showModal"
-  [message]="deleteMsg"
-  [confirmText]="confirmText"
-  [cancelText]="cancelText"
-  (confirm)="confirmDelete()"
-  (cancel)="cancelDelete()"
-/>
+      }
+    </tbody>
+  </table>
+  <div class="pagination-controls">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">Anterior</button>
+    <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+    <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages - 1">Siguiente</button>
+  </div>
+</div>
+<app-confirm-modal [visible]="showModal" [message]="deleteMsg" [confirmText]="confirmText" [cancelText]="cancelText"
+  (confirm)="confirmDelete()" (cancel)="cancelDelete()" />
