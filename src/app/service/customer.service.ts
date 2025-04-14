@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Customer } from '../interfaces/customer.interface';
+import { toHttpParams } from '../utils/http-utils/http-utils.component';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,9 @@ export class CustomerService {
 
   constructor(private http: HttpClient) { }
 
-  getCustomerList(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(this.api);
+  getCustomerList(name?: string): Observable<Customer[]> {
+    const query = { name };
+    return this.http.get<Customer[]>(this.api, toHttpParams(query));
   }
 
   getCustomer(id: number): Observable<Customer> {

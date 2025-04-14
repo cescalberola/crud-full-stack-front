@@ -12,6 +12,7 @@ import {
 } from '../../shared/app.constants';
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 import { AlertComponent } from '../../shared/alert/alert.component';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-customer-list',
@@ -34,10 +35,29 @@ export class CustomerListComponent implements OnInit {
   readonly deleteMsg = CONFIRM_MESSAGES.DELETE_CUSTOMER;
 
   constructor(
-    private customerService: CustomerService) {}
+    private customerService: CustomerService) { }
+    private searchSubject = new Subject<string>();
 
-  ngOnInit(): void {
-    this.listCustomers();
+    ngOnInit(): void {
+      this.searchSubject.pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      ).subscribe((name) => {
+        this.customerService.getCustomerList(name).subscribe({
+          next: (data) => this.customers = data,
+          error: (err) => console.error('Error al buscar clientes:', err)
+        });
+      });
+
+      this.customerService.getCustomerList().subscribe({
+        next: (data) => this.customers = data,
+        error: (err) => console.error('Error al cargar clientes:', err)
+      });
+    }
+
+
+  onFilterChange(): void {
+    this.searchSubject.next(this.filterName.trim());
   }
 
   trackById(index: number, customer: Customer): number {
@@ -45,16 +65,11 @@ export class CustomerListComponent implements OnInit {
   }
 
   listCustomers(): void {
-    this.customerService.getCustomerList().subscribe({
+    const nameParam = this.filterName.trim();
+    this.customerService.getCustomerList(nameParam).subscribe({
       next: (data) => this.customers = data,
       error: (err) => console.error('Error al cargar clientes:', err)
     });
-  }
-
-  filteredCustomers(): Customer[] {
-    return this.customers.filter(customer =>
-      customer.firstName.toLowerCase().includes(this.filterName.toLowerCase())
-    );
   }
 
   onRequestDelete(id: number): void {

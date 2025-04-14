@@ -4,6 +4,7 @@
   type="text"
   placeholder="Buscar por nombre..."
   [(ngModel)]="filterName"
+  (ngModelChange)="onFilterChange()"
   style="margin-bottom: 10px; padding: 4px; width: 250px;"
 />
 
@@ -21,7 +22,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (customer of filteredCustomers(); track trackById){
+    @for (customer of customers; track trackById){
       <tr>
         <td>{{ customer.id }}</td>
         <td>{{ customer.firstName }}</td>
